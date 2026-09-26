@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Birthday Cake 🎂</title>
+<style>
+  * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body { margin:0; width:100%; height:100%; overflow:hidden; }
+  body {
+    background:#171326;
+    color:#fff;
+    font-family: "Courier New", monospace;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  .scene {
+    width:100%;
+    height:100%;
+    position:relative;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    background:
+      radial-gradient(circle at 50% 42%, #342050 0 2%, transparent 18%),
+      linear-gradient(#171326, #241735);
+  }
+
+  .stars, .confetti {
+    position:absolute;
+    inset:0;
+    pointer-events:none;
+  }
+  .star {
+    position:absolute;
+    color:#ffd966;
+    font-size:10px;
+    animation: twinkle 1.8s steps(2) infinite;
+  }
+  @keyframes twinkle {
+    50% { opacity:.25; transform:scale(.7); }
+  }
+
+  .title {
+    position:absolute;
+    top:9%;
+    text-align:center;
+    font-size:clamp(18px, 6vw, 30px);
+    line-height:1.3;
+    color:#ffcc66;
+    text-shadow:4px 4px #542c50;
+    letter-spacing:1px;
+  }
+
+  .cake-wrap {
+    position:relative;
+    width:280px;
+    max-width:80vw;
+    height:250px;
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+  }
+
+  /* Pixel-art cake made with box-shadows */
+  .cake {
+    position:relative;
+    width:190px;
+    height:100px;
+    margin-bottom:25px;
+    background:#6b321f;
+    border:8px solid #321b24;
+    box-shadow:
+      inset 0 12px #9a4d2f,
+      inset 0 -12px #4b241e,
+      8px 8px 0 #321b24;
+  }
+  .cake:before {
+    content:"";
+    position:absolute;
+    left:12px; right:12px; top:-25px;
+    height:25px;
+    background:#f2d1b3;
+    border:8px solid #321b24;
+    border-bottom:0;
+    box-shadow:inset 0 -7px #e3a77d;
+  }
+  .cake:after {
+    content:"";
+    position:absolute;
+    left:28px; top:10px;
+    width:12px; height:12px;
+    background:#ffd966;
+    box-shadow:
+      45px 18px #ff8c66,
+      92px 5px #ffd966,
+      125px 25px #ff8c66;
+  }
+
+  .plate {
+    position:absolute;
+    bottom:17px;
+    width:235px;
+    height:18px;
+    background:#a98bd4;
+    border:6px solid #321b24;
+    box-shadow:0 7px #321b24;
+  }
+
+  .candle {
+    position:absolute;
+    width:18px;
+    height:55px;
+    background:#f5e6c8;
+    border:6px solid #321b24;
+    bottom:150px;
+    left:50%;
+    transform:translateX(-50%);
+  }
+  .candle:before {
+    content:"";
+    position:absolute;
+    width:10px;
+    height:10px;
+    background:#ff6b6b;
+    top:8px;
+    left:-2px;
+    box-shadow:10px 15px #ff6b6b;
+  }
+
+  .flame {
+    position:absolute;
+    width:18px;
+    height:25px;
+    background:#ffd966;
+    border:5px solid #321b24;
+    left:-5px;
+    top:-30px;
+    animation:flicker .45s steps(2) infinite alternate;
+  }
+  .flame:after {
+    content:"";
+    position:absolute;
+    width:6px; height:9px;
+    background:#ff8c66;
+    left:1px; top:5px;
+  }
+  @keyframes flicker {
+    to { transform:translateY(-4px) scale(.9); }
+  }
+
+  .button {
+    position:absolute;
+    bottom:8%;
+    border:6px solid #321b24;
+    background:#ff8c66;
+    color:#321b24;
+    padding:13px 20px;
+    font-family:inherit;
+    font-weight:bold;
+    font-size:15px;
+    box-shadow:6px 6px 0 #321b24;
+    cursor:pointer;
+  }
+  .button:active { transform:translate(4px,4px); box-shadow:2px 2px 0 #321b24; }
+
+  .message {
+    position:absolute;
+    inset:0;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    background:rgba(23,19,38,.78);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .35s;
+  }
+  .message.show { opacity:1; }
+  .msg {
+    font-size:clamp(25px, 8vw, 42px);
+    color:#ffd966;
+    text-shadow:5px 5px #542c50;
+    line-height:1.4;
+    padding:20px;
+    animation:pop .5s steps(3);
+  }
+  .sub {
+    font-size:13px;
+    color:#fff;
+    margin-top:5px;
+  }
+  @keyframes pop {
+    0% { transform:scale(.2); }
+    70% { transform:scale(1.15); }
+    100% { transform:scale(1); }
+  }
+
+  .conf {
+    position:absolute;
+    width:8px;
+    height:14px;
+    top:-20px;
+    animation:fall 2.2s linear forwards;
+  }
+  @keyframes fall {
+    to { transform:translateY(110vh) rotate(720deg); }
+  }
+
+  .off .flame { display:none; }
+  .off .candle { height:55px; }
+</style>
+</head>
+<body>
+<div class="scene" id="scene">
+  <div class="stars" id="stars"></div>
+  <div class="title">HAPPY BIRTHDAY!</div>
+
+  <div class="cake-wrap" id="cakeWrap">
+    <div class="candle"><div class="flame"></div></div>
+    <div class="cake"></div>
+    <div class="plate"></div>
+  </div>
+
+  <button class="button" id="wish">MAKE A WISH ✨</button>
+
+  <div class="message" id="message">
+    <div class="msg">สสวก<br>ไอหมาสติช 🐶</div>
+    <div class="sub">🎂🍫 ขอให้มีความสุขมาก ๆ 🎉</div>
+  </div>
+</div>
+
+<script>
+  const stars = document.getElementById("stars");
+  const scene = document.getElementById("scene");
+  const message = document.getElementById("message");
+  const button = document.getElementById("wish");
+
+  for (let i = 0; i < 30; i++) {
+    const s = document.createElement("div");
+    s.className = "star";
+    s.textContent = Math.random() > .5 ? "✦" : "·";
+    s.style.left = Math.random()*100 + "%";
+    s.style.top = Math.random()*100 + "%";
+    s.style.animationDelay = Math.random()*2 + "s";
+    stars.appendChild(s);
+  }
+
+  function confetti() {
+    const chars = ["■","▪","◆","✦"];
+    for (let i=0; i<70; i++) {
+      const c = document.createElement("div");
+      c.className = "conf";
+      c.textContent = chars[Math.floor(Math.random()*chars.length)];
+      c.style.left = Math.random()*100 + "%";
+      c.style.fontSize = (8 + Math.random()*10) + "px";
+      c.style.animationDelay = Math.random()*.6 + "s";
+      c.style.color = ["#ff8c66","#ffd966","#a98bd4","#f2d1b3"][Math.floor(Math.random()*4)];
+      scene.appendChild(c);
+      setTimeout(() => c.remove(), 3000);
+    }
+  }
+
+  button.addEventListener("click", () => {
+    scene.classList.add("off");
+    button.style.display = "none";
+    setTimeout(() => {
+      message.classList.add("show");
+      confetti();
+    }, 450);
+  });
+</script>
+</body>
+</html>
